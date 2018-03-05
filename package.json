@@ -1,0 +1,62 @@
+{
+  "name": "@catalyst-elements/catalyst-toggle-mixin",
+  "license": "BSD-3-Clause",
+  "version": "0.0.0",
+  "description": "A toggles mixin behavior for an element.",
+  "main": "catalyst-toggle-mixin.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/catalyst/catalyst-toggle-mixin.git"
+  },
+  "author": {
+    "name": "Rebecca Stevens",
+    "email": "rebeccastevens@catalyst.net.nz"
+  },
+  "keywords": [
+    "web-components",
+    "button",
+    "toggle"
+  ],
+  "bugs": {
+    "url": "https://github.com/catalyst/catalyst-toggle-mixin/issues"
+  },
+  "homepage": "https://github.com/catalyst/catalyst-toggle-mixin#readme",
+  "scripts": {
+    "analyze": "scripts/analyze.sh",
+    "build-docs": "scripts/build-docs.sh",
+    "lint": "scripts/lint.sh",
+    "serve": "scripts/serve.sh",
+    "postinstall": "scripts/fix-dependencies.sh"
+  },
+  "devDependencies": {
+    "@polymer/iron-component-page": "^3.0.0-pre.1",
+    "@polymer/iron-demo-helpers": "^3.0.0-pre.1",
+    "@polymer/test-fixture": "^3.0.0-pre.1",
+    "@webcomponents/shadycss": "^1.1.1",
+    "@webcomponents/webcomponentsjs": "^1.1.0",
+    "babel-eslint": "^8.2.1",
+    "del": "^3.0.0",
+    "eslint": "^4.18.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "graceful-fs": "^4.1.11",
+    "gulp": "^4.0.0",
+    "gulp-eslint": "^4.0.1",
+    "gulp-file": "^0.4.0",
+    "gulp-foreach": "^0.1.0",
+    "gulp-modify-file": "^1.0.0",
+    "gulp-rename": "^1.2.2",
+    "marked": "^0.3.12",
+    "merge-stream": "^1.0.1",
+    "polymer-analyzer": "^v3.0.0-pre.12",
+    "polymer-build": "^2.1.1",
+    "polyserve": "^0.24.0",
+    "prismjs": "^1.11.0",
+    "vinyl-named": "^1.1.0",
+    "webpack": "^4.0.1",
+    "webpack-closure-compiler": "^2.1.6",
+    "webpack-stream": "^4.0.1"
+  },
+  "engines": {
+    "yarn": ">= 1.0.0"
+  }
+}
