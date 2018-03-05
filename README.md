@@ -1,4 +1,4 @@
-# &lt;catalyst-toggle-mixin&gt;
+# catalyst-toggle-mixin
 
 [![Travis](https://img.shields.io/travis/catalyst/catalyst-toggle-mixin.svg?style=flat-square)](https://travis-ci.org/catalyst/catalyst-toggle-mixin)
 [![David](https://img.shields.io/david/catalyst/catalyst-toggle-mixin.svg?style=flat-square)](https://david-dm.org/catalyst/catalyst-toggle-mixin)
