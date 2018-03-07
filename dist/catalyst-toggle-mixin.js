@@ -47,7 +47,7 @@ const CatalystToggleMixin = superClass => {
      * @protected
      */
     initInputElement() {
-      this._inputElement = this.querySelector('input type="checkbox"');
+      this._inputElement = this.querySelector('input[type="checkbox"]');
 
       if (this._inputElement === null) {
         this._inputElement = document.createElement('input');
