@@ -36,6 +36,14 @@ Please note that this package is not compatible with Bower.
 import CatalystToggleMixin from './node_modules/@catalyst-elements/catalyst-toggle-mixin/dist/catalyst-toggle-mixin.js';
 
 class MyToggleElement extends CatalystToggleMixin(HTMLElement) {
+
+  constructor() {
+    super();
+    this.attachShadow({mode: 'open'});
+    super.initInputElement();
+    // ...
+  }
+
   // ...
 }
 ```
@@ -45,11 +53,15 @@ class MyToggleElement extends CatalystToggleMixin(HTMLElement) {
 ```html
 <script src="node_modules/@catalyst-elements/catalyst-toggle-mixin/dist/catalyst-toggle-mixin.es5.min.js"></script>
 <script>
+  var SuperClass = window.CatalystElements.CatalystToggleMixin(HTMLElement);
+
   function MyToggleElement() {
-    window.CatalystElements.CatalystToggleMixin.call(this);
+    SuperClass.call(this);
+    this.attachShadow({mode: 'open'});
+    SuperClass.initInputElement.call(this);
     // ...
   };
-  MyToggleElement.prototype = Object.create(window.CatalystElements.CatalystToggleMixin(HTMLElement).prototype);
+  MyToggleElement.prototype = Object.create(SuperClass.prototype);
   MyToggleElement.prototype.constructor = MyToggleElement;
 
   // ...
