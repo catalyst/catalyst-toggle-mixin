@@ -35,29 +35,28 @@ const CatalystToggleMixin = superClass => {
     }
 
     /**
-     * Construct the mxin.
-     *
-     * @param {HTMLTemplate} template
-     *   The template to use.
+     * Construct the mixin.
      */
-    constructor(template) {
+    constructor() {
       super();
+    }
 
-      // Create a shadow root and stamp out the template's content inside.
-      this.attachShadow({mode: 'open'});
-      this.shadowRoot.appendChild(template.content.cloneNode(true));
+    /**
+     * Initialize the input element.
+     *
+     * @protected
+     */
+    initInputElement() {
+      this._inputElement = this.querySelector('input type="checkbox"');
 
-      // The input element needs to be in the lightDom to work with form elements.
+      if (this._inputElement === null) {
+        this._inputElement = document.createElement('input');
+        this._inputElement.type = 'checkbox';
+        this._inputElement.style.display = 'none';
 
-      /**
-       * The element that will be submitted as part of a form to represent this component.
-       *
-       * @type {HTMLElement}
-       */
-      this._inputElement = document.createElement('input');
-      this._inputElement.type = 'checkbox';
-      this._inputElement.style.display = 'none';
-      this.appendChild(this._inputElement);
+        // The input element needs to be in the lightDom to work with form elements.
+        this.appendChild(this._inputElement);
+      }
     }
 
     /**
