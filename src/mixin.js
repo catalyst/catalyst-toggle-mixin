@@ -1,9 +1,10 @@
+/**
+ * @mixinFunction
+ * @polymer
+ */
 const CatalystToggleMixin = superClass => {
 
-  /**
-   * @mixin
-   */
-  class CatalystToggle extends superClass {
+  return class extends superClass {
 
     /**
      * Key codes.
@@ -499,8 +500,6 @@ const CatalystToggleMixin = superClass => {
       return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
     }
   }
-
-  return CatalystToggle;
 };
 
 export default CatalystToggleMixin;
