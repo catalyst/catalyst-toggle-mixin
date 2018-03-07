@@ -4,7 +4,7 @@
  */
 const CatalystToggleMixin = superClass => {
 
-  return class extends superClass {
+  return class CatalystToggle extends superClass {
 
     /**
      * Key codes.
