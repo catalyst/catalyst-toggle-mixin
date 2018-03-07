@@ -39,24 +39,14 @@ const CatalystToggleMixin = superClass => {
      */
     constructor() {
       super();
-    }
 
-    /**
-     * Initialize the input element.
-     *
-     * @protected
-     */
-    initInputElement() {
-      this._inputElement = this.querySelector('input[type="checkbox"]');
+      // Create the input element.
+      this._inputElement = document.createElement('input');
+      this._inputElement.type = 'checkbox';
+      this._inputElement.style.display = 'none';
 
-      if (this._inputElement === null) {
-        this._inputElement = document.createElement('input');
-        this._inputElement.type = 'checkbox';
-        this._inputElement.style.display = 'none';
-
-        // The input element needs to be in the lightDom to work with form elements.
-        this.appendChild(this._inputElement);
-      }
+      // The input element needs to be in the lightDom to work with form elements.
+      this.appendChild(this._inputElement);
     }
 
     /**

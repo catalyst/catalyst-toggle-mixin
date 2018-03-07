@@ -39,8 +39,6 @@ class MyToggleElement extends CatalystToggleMixin(HTMLElement) {
 
   constructor() {
     super();
-    this.attachShadow({mode: 'open'});
-    super.initInputElement();
     // ...
   }
 
@@ -57,8 +55,6 @@ class MyToggleElement extends CatalystToggleMixin(HTMLElement) {
 
   function MyToggleElement() {
     SuperClass.call(this);
-    this.attachShadow({mode: 'open'});
-    SuperClass.initInputElement.call(this);
     // ...
   };
   MyToggleElement.prototype = Object.create(SuperClass.prototype);
