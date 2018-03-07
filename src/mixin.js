@@ -67,10 +67,10 @@ const CatalystToggleMixin = superClass => {
 
       // Set this element's role and tab index if they are not already set.
       if (!this.hasAttribute('role')) {
-        this.setAttribute('role', 'button');
-        this.setAttribute('aria-pressed', this.checked);
-      } else if (this.getAttribute('role') !== 'button') {
+        this.setAttribute('role', 'checkbox');
         this.setAttribute('aria-checked', this.checked);
+      } else if (this.getAttribute('role') === 'button') {
+        this.setAttribute('aria-pressed', this.checked);
       }
       if (!this.hasAttribute('tabindex')) {
         this.setAttribute('tabindex', 0);
