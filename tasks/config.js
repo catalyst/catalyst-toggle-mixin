@@ -8,8 +8,17 @@ module.exports = {
 
   mixin: {
     name: 'catalyst-toggle-mixin',
-    class: 'CatalystToggleMixin',
+    export: 'CatalystToggleMixin',
     scope: packageInfo.name.substring(0, packageInfo.name.lastIndexOf('/')),
+  },
+
+  src: {
+    path: 'src',
+    entrypoint: 'mixin.js'
+  },
+
+  dist: {
+    path: 'dist',
   },
 
   docs: {

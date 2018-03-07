@@ -1,9 +1,9 @@
-export default superClass => {
+const CatalystToggleMixin = superClass => {
 
   /**
    * @mixin
    */
-  class CatalystToggleMixin extends superClass {
+  class CatalystToggle extends superClass {
 
     /**
      * Key codes.
@@ -24,17 +24,17 @@ export default superClass => {
     }
 
     /**
-     * The attributes on this element to observe.
+     * The attributes on this mixin to observe.
      *
      * @returns {Array.<string>}
-     *   The attributes this element is observing for changes.
+     *   The attributes this mixin is observing for changes.
      */
     static get observedAttributes() {
       return ['checked', 'pressed', 'disabled', 'required', 'name', 'value', 'form'];
     }
 
     /**
-     * Construct the element.
+     * Construct the mxin.
      *
      * @param {HTMLTemplate} template
      *   The template to use.
@@ -49,7 +49,7 @@ export default superClass => {
       // The input element needs to be in the lightDom to work with form elements.
 
       /**
-       * The element that will be submitting as part of a form to represent this component.
+       * The element that will be submitted as part of a form to represent this component.
        *
        * @type {HTMLElement}
        */
@@ -424,8 +424,8 @@ export default superClass => {
 
       // What key was pressed?
       switch (event.keyCode) {
-        case CatalystToggleMixin._KEYCODE.SPACE:
-        case CatalystToggleMixin._KEYCODE.ENTER:
+        case CatalystToggle._KEYCODE.SPACE:
+        case CatalystToggle._KEYCODE.ENTER:
           event.preventDefault();
           this._toggleChecked();
           break;
@@ -500,5 +500,7 @@ export default superClass => {
     }
   }
 
-  return CatalystToggleMixin;
+  return CatalystToggle;
 };
+
+export default CatalystToggleMixin;

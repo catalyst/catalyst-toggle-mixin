@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/catalyst/catalyst-toggle-mixin#readme",
   "scripts": {
+    "build": "scripts/build.sh",
     "analyze": "scripts/analyze.sh",
     "build-docs": "scripts/build-docs.sh",
     "lint": "scripts/lint.sh",

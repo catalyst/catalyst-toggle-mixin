@@ -31,6 +31,21 @@ Select the element and choose a demo to see the element in action.
 
 Please note that as this is an unbuild version of the docs, not all browser will be able to view the page. To view the built version of the docs see [Docs](#docs)
 
+## Building
+
+The build process will create the following versions of the component in the distribution folder (`./dist`):
+
+* an es6 module version
+* an es5 minified script version
+
+[Gulp](https://gulpjs.com) is used to run the build process.
+
+Build with:
+
+```sh
+yarn run build
+```
+
 ## Coding Style
 
 This project uses [ESLint](http://eslint.org) to lint JavaScript and [Sass Lint](https://github.com/sasstools/sass-lint) to lint Sass.

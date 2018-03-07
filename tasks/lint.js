@@ -9,6 +9,7 @@ const eslint = require('gulp-eslint');
 gulp.task('lint:js', () => {
   return gulp.src([
       './*.js',
+      `./${config.src.path}/**/*.js`,
       `./${config.tasks.path}/**/*.js`
     ])
     .pipe(eslint())

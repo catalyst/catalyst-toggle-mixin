@@ -5,6 +5,11 @@ const config = require('./config.js');
 const gulp = require('gulp');
 const del = require('del');
 
+// Clean the dist path.
+gulp.task('clean-dist', async () => {
+  await del(`./${config.dist.path}`);
+});
+
 // Clean the tmp path.
 gulp.task('clean-tmp', async () => {
   await del(`./${config.temp.path}`);

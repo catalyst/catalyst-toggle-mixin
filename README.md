@@ -30,15 +30,33 @@ Please note that this package is not compatible with Bower.
 
 ## Usage
 
-### As a Module
+### As a Module (Recommend)
 
 ```js
-import CatalystToggleMixin from './node_modules/@catalyst-elements/catalyst-toggle-mixin/catalyst-toggle-mixin.js';
+import CatalystToggleMixin from './node_modules/@catalyst-elements/catalyst-toggle-mixin/dist/catalyst-toggle-mixin.js';
 
 class MyToggleElement extends CatalystToggleMixin(HTMLElement) {
   // ...
 }
 ```
+
+### As a Script
+
+```html
+<script src="node_modules/@catalyst-elements/catalyst-toggle-mixin/dist/catalyst-toggle-mixin.es5.min.js"></script>
+<script>
+  function MyToggleElement() {
+    window.CatalystElements.CatalystToggleMixin.call(this);
+    // ...
+  };
+  MyToggleElement.prototype = Object.create(window.CatalystElements.CatalystToggleMixin(HTMLElement).prototype);
+  MyToggleElement.prototype.constructor = MyToggleElement;
+
+  // ...
+</script>
+```
+
+Please note that this script has been transpiled to es5 and thus use of `custom-elements-es5-adapter.js` or an equivalent library is required. See [es5 support](https://github.com/catalyst/CatalystElements/wiki/Browser-Compatibility#es5-support) on the Catalyst Elements wiki for details.
 
 ## Contributions
 

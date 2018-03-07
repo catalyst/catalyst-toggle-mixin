@@ -33,6 +33,9 @@ gulp.task('docs-clone-dependencies', gulp.series(() => {
     `./${config.docs.importsFilename}`,
     `./${config.docs.analysisFilename}`
   ]).pipe(gulp.dest(`./${config.temp.path}`));
+}, () => {
+  // Copy everything in dist.
+  return gulp.src(`./${config.dist.path}/**`, { base: './' }).pipe(gulp.dest(`./${config.temp.path}/${config.docs.nodeModulesPath}/${config.package.name}/`));
 }));
 
 // Update analysis.

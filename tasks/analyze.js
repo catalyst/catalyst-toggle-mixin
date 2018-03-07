@@ -10,7 +10,7 @@ const file = require('gulp-file');
 gulp.task('create-analysis', () => {
   const analyzer = Analyzer.createForDirectory('./');
 
-  return analyzer.analyze([`./${config.mixin.name}.js`]).then((analysis) => {
+  return analyzer.analyze([`./${config.dist.path}/${config.mixin.name}.js`]).then((analysis) => {
     let analysisFileContents = JSON.stringify(generateAnalysis(analysis, analyzer.urlResolver));
     return file(config.docs.analysisFilename, analysisFileContents, { src: true })
       .pipe(gulp.dest('./'));
