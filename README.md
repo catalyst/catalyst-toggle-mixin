@@ -33,7 +33,7 @@ Please note that this package is not compatible with Bower.
 ### As a Module (Recommend)
 
 ```js
-import CatalystToggleMixin from './node_modules/@catalyst-elements/catalyst-toggle-mixin/dist/catalyst-toggle-mixin.js';
+import CatalystToggleMixin from './node_modules/@catalyst-elements/catalyst-toggle-mixin/catalyst-toggle-mixin.js';
 
 class MyToggleElement extends CatalystToggleMixin(HTMLElement) {
 
@@ -49,7 +49,7 @@ class MyToggleElement extends CatalystToggleMixin(HTMLElement) {
 ### As a Script
 
 ```html
-<script src="node_modules/@catalyst-elements/catalyst-toggle-mixin/dist/catalyst-toggle-mixin.es5.min.js"></script>
+<script src="node_modules/@catalyst-elements/catalyst-toggle-mixin/catalyst-toggle-mixin.es5.min.js"></script>
 <script>
   var SuperClass = window.CatalystElements.CatalystToggleMixin(HTMLElement);
 

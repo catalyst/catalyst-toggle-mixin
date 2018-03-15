@@ -3,7 +3,7 @@
   "license": "BSD-3-Clause",
   "version": "0.4.2",
   "description": "A toggles mixin behavior for an element.",
-  "main": "catalyst-toggle-mixin.js",
+  "main": "src/mixin.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/catalyst/catalyst-toggle-mixin.git"
@@ -29,7 +29,8 @@
     "build-docs": "node node_modules/gulp/bin/gulp.js build-docs",
     "lint": "node node_modules/gulp/bin/gulp.js lint",
     "serve": "node node_modules/polyserve/bin/polyserve --npm",
-    "postinstall": "node node_modules/gulp/bin/gulp.js fix-dependencies"
+    "postinstall": "node node_modules/gulp/bin/gulp.js fix-dependencies",
+    "prepublishOnly": "echo \"Error: must publish from dist/\" && exit 1"
   },
   "devDependencies": {
     "@polymer/iron-component-page": "^3.0.0-pre.1",

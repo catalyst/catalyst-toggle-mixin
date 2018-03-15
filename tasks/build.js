@@ -214,12 +214,41 @@ gulp.task(
   })
 );
 
+gulp.task(
+  'build-finalize',
+  gulp.parallel(
+    () => {
+      return gulp
+        .src(['README.md', 'LICENSE'])
+        .pipe(gulp.dest(`./${config.dist.path}`));
+    },
+    () => {
+      return gulp
+        .src('package.json')
+        .pipe(
+          modifyFile(content => {
+            const json = JSON.parse(content);
+            json.main = `${config.mixin.name}.js`;
+            json.scripts = {
+              prepublishOnly:
+                "node -e \"assert.equal(require('./package.json').version, require('../package.json').version)\""
+            };
+            delete json.directories;
+            delete json.engines;
+            return prettier.format(JSON.stringify(json), { parser: 'json' });
+          })
+        )
+        .pipe(gulp.dest(`./${config.dist.path}`));
+    }
+  )
+);
+
 // Build all the component's versions.
 gulp.task(
   'build',
   gulp.series(
     'clean-dist',
     gulp.parallel('build-module', 'build-script'),
-    'clean-tmp'
+    gulp.parallel('build-finalize', 'clean-tmp')
   )
 );
