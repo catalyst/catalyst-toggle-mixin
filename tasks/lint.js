@@ -7,7 +7,8 @@ const eslint = require('gulp-eslint');
 
 // Lint JS
 gulp.task('lint:js', () => {
-  return gulp.src([
+  return gulp
+    .src([
       './*.js',
       `./${config.src.path}/**/*.js`,
       `./${config.tasks.path}/**/*.js`

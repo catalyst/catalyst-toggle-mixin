@@ -10,7 +10,6 @@ if (scope === '') {
 }
 
 module.exports = {
-
   mixin: {
     name: 'catalyst-toggle-mixin',
     export: 'CatalystToggleMixin',
@@ -24,7 +23,7 @@ module.exports = {
   },
 
   dist: {
-    path: 'dist',
+    path: 'dist'
   },
 
   docs: {
@@ -37,7 +36,7 @@ module.exports = {
   },
 
   tasks: {
-    path: 'tasks',
+    path: 'tasks'
   },
 
   temp: {

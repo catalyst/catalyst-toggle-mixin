@@ -36,7 +36,6 @@ Please note that this package is not compatible with Bower.
 import CatalystToggleMixin from './node_modules/@catalyst-elements/catalyst-toggle-mixin/catalyst-toggle-mixin.js';
 
 class MyToggleElement extends CatalystToggleMixin(HTMLElement) {
-
   constructor() {
     super();
     // ...

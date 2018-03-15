@@ -3,9 +3,7 @@
  * @polymer
  */
 const CatalystToggleMixin = superClass => {
-
   return class CatalystToggle extends superClass {
-
     /**
      * Key codes.
      *
@@ -18,7 +16,7 @@ const CatalystToggleMixin = superClass => {
         this.__keycode = {
           SPACE: 32,
           ENTER: 13
-        }
+        };
       }
 
       return this.__keycode;
@@ -31,7 +29,15 @@ const CatalystToggleMixin = superClass => {
      *   The attributes this mixin is observing for changes.
      */
     static get observedAttributes() {
-      return ['checked', 'pressed', 'disabled', 'required', 'name', 'value', 'form'];
+      return [
+        'checked',
+        'pressed',
+        'disabled',
+        'required',
+        'name',
+        'value',
+        'form'
+      ];
     }
 
     /**
@@ -212,8 +218,7 @@ const CatalystToggleMixin = superClass => {
       const isDisabled = Boolean(value);
       if (isDisabled) {
         this.setAttribute('disabled', '');
-      }
-      else {
+      } else {
         this.removeAttribute('disabled');
       }
     }
@@ -238,8 +243,7 @@ const CatalystToggleMixin = superClass => {
       const isRequired = Boolean(value);
       if (isRequired) {
         this.setAttribute('required', '');
-      }
-      else {
+      } else {
         this.removeAttribute('required');
       }
     }
@@ -366,7 +370,11 @@ const CatalystToggleMixin = superClass => {
             this.inputElement.removeAttribute('disabled');
 
             // If the tab index isn't already set and the previous value is known.
-            if (!this.hasAttribute('tabindex') && this._tabindexBeforeDisabled !== undefined && this._tabindexBeforeDisabled !== null) {
+            if (
+              !this.hasAttribute('tabindex') &&
+              this._tabindexBeforeDisabled !== undefined &&
+              this._tabindexBeforeDisabled !== null
+            ) {
               this.setAttribute('tabindex', this._tabindexBeforeDisabled);
             }
           }
@@ -378,8 +386,7 @@ const CatalystToggleMixin = superClass => {
 
           if (hasValue) {
             this.inputElement.setAttribute('required', '');
-          }
-          else {
+          } else {
             this.inputElement.removeAttribute('required');
           }
           break;
@@ -459,11 +466,11 @@ const CatalystToggleMixin = superClass => {
       if (this.getAttribute('role') === 'button') {
         // Change the value of pressed.
         this.pressed = !this.pressed;
-        detail = {pressed: this.pressed};
+        detail = { pressed: this.pressed };
       } else {
         // Change the value of checked.
         this.checked = !this.checked;
-        detail = {checked: this.checked};
+        detail = { checked: this.checked };
       }
 
       /**
@@ -471,10 +478,12 @@ const CatalystToggleMixin = superClass => {
        *
        * @event change
        */
-      this.dispatchEvent(new CustomEvent('change', {
-        detail: detail,
-        bubbles: true,
-      }));
+      this.dispatchEvent(
+        new CustomEvent('change', {
+          detail: detail,
+          bubbles: true
+        })
+      );
     }
 
     /**
@@ -484,11 +493,26 @@ const CatalystToggleMixin = superClass => {
      */
     _generateGuid() {
       const s4 = () => {
-        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+        return Math.floor((1 + Math.random()) * 0x10000)
+          .toString(16)
+          .substring(1);
       };
-      return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+      return (
+        s4() +
+        s4() +
+        '-' +
+        s4() +
+        '-' +
+        s4() +
+        '-' +
+        s4() +
+        '-' +
+        s4() +
+        s4() +
+        s4()
+      );
     }
-  }
+  };
 };
 
 export default CatalystToggleMixin;
