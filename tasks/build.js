@@ -131,8 +131,8 @@ function createElementScript() {
               0,
               esprima.parseScript(
                 `window.CatalystElements.${
-                  catalystExports[i].declaration.type.name
-                } = ${catalystExports[i].declaration.type.name};`
+                  catalystExports[i].declaration.name
+                } = ${catalystExports[i].declaration.name};`
               )
             );
           } else {
