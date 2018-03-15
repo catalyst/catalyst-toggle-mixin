@@ -243,12 +243,19 @@ gulp.task(
   )
 );
 
+gulp.task('build-symlinks', () => {
+  return gulp
+    .src(`./${config.dist.path}/${config.mixin.name}**.js`)
+    .pipe(gulp.symlink('./'));
+});
+
 // Build all the component's versions.
 gulp.task(
   'build',
   gulp.series(
     'clean-dist',
     gulp.parallel('build-module', 'build-script'),
-    gulp.parallel('build-finalize', 'clean-tmp')
+    gulp.parallel('build-finalize', 'clean-tmp'),
+    'build-symlinks'
   )
 );

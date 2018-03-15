@@ -9,3 +9,7 @@ yarn-error.log
 # Docs
 /docs/
 /analysis.json
+
+# Symlinks
+/catalyst-toggle-mixin.js
+/catalyst-toggle-mixin.es5.min.js
