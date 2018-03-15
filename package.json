@@ -1,7 +1,7 @@
 {
   "name": "@catalyst-elements/catalyst-toggle-mixin",
   "license": "BSD-3-Clause",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "A toggles mixin behavior for an element.",
   "main": "src/mixin.js",
   "repository": {
