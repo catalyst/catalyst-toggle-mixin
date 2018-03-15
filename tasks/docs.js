@@ -51,7 +51,7 @@ gulp.task(
     () => {
       // Copy everything in dist.
       return gulp
-        .src(`./${config.dist.path}/**`, { base: './' })
+        .src(`./${config.dist.path}/**`)
         .pipe(
           gulp.dest(
             `./${config.temp.path}/${config.docs.nodeModulesPath}/${
