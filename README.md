@@ -1,6 +1,6 @@
 # catalyst-toggle-mixin
 
-[![Travis](https://img.shields.io/travis/catalyst/catalyst-toggle-mixin.svg?style=flat-square)](https://travis-ci.org/catalyst/catalyst-toggle-mixin)
+[![Travis](https://img.shields.io/travis/catalyst/catalyst-toggle-mixin/master.svg?style=flat-square)](https://travis-ci.org/catalyst/catalyst-toggle-mixin)
 [![David](https://img.shields.io/david/catalyst/catalyst-toggle-mixin.svg?style=flat-square)](https://david-dm.org/catalyst/catalyst-toggle-mixin)
 [![David](https://img.shields.io/david/dev/catalyst/catalyst-toggle-mixin.svg?style=flat-square)](https://david-dm.org/catalyst/catalyst-toggle-mixin?type=dev)
 [![npm (scoped)](https://img.shields.io/npm/v/@catalyst-elements/catalyst-toggle-mixin.svg?style=flat-square)](https://www.npmjs.com/package/@catalyst-elements/catalyst-toggle-mixin)
