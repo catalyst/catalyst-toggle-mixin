@@ -252,6 +252,7 @@ gulp.task(
             };
             delete json.directories;
             delete json.engines;
+            delete json.devDependencies;
             return prettier.format(JSON.stringify(json), { parser: 'json' });
           })
         )
