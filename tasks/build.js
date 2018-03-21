@@ -9,11 +9,13 @@ const modifyFile = require('gulp-modify-file');
 const prettier = require('prettier');
 const rename = require('gulp-rename');
 const webpack = require('webpack');
-const webpackClosureCompilerPlugin = require('webpack-closure-compiler');
+const WebpackClosureCompilerPlugin = require('webpack-closure-compiler');
 const webpackStream = require('webpack-stream');
 
 /**
  * Create the element module file.
+ *
+ * @returns {NodeJS.ReadWriteStream}
  */
 function createElementModule() {
   return gulp
@@ -37,6 +39,8 @@ function createElementModule() {
 
 /**
  * Create the element file.
+ *
+ * @returns {NodeJS.ReadWriteStream}
  */
 function createElementScript() {
   return gulp
@@ -44,12 +48,12 @@ function createElementScript() {
     .pipe(
       modifyFile(content => {
         // Parse the code.
-        let parsed = esprima.parseModule(content);
+        const parsed = esprima.parseModule(content);
 
         // Get info about the code.
-        let codeIndexesToRemove = [];
-        let catalystImports = {};
-        let catalystExports = {};
+        const codeIndexesToRemove = [];
+        const catalystImports = {};
+        const catalystExports = {};
         for (let i = 0; i < parsed.body.length; i++) {
           switch (parsed.body[i].type) {
             case 'ImportDeclaration':
@@ -85,16 +89,21 @@ function createElementScript() {
         );
 
         // Replace catalyst element's imports with globally accessible object import.
-        for (let i in catalystImports) {
-          for (let j = catalystImports[i].specifiers.length - 1; j >= 0; j--) {
-            let localName = catalystImports[i].specifiers[j].local.name;
-            let importedName = catalystImports[i].specifiers[j].imported
-              ? catalystImports[i].specifiers[j].imported.name
+        const importDefs = Object.keys(catalystImports);
+        for (let i = 0; i < importDefs.length; i++) {
+          const importDefIndex = importDefs[i];
+          const importDef = catalystExports[importDefIndex];
+          const specifiers = Object.values(importDef.specifiers);
+          for (let j = specifiers.length - 1; j >= 0; j--) {
+            const specifier = specifiers[j];
+            const localName = specifier.local.name;
+            const importedName = specifier.imported
+              ? specifier.imported.name
               : localName;
 
             if (importedName.startsWith('Catalyst')) {
               parsed.body.splice(
-                i,
+                importDefIndex,
                 0,
                 esprima.parseScript(
                   `let ${localName} = window.CatalystElements.${importedName};`
@@ -104,51 +113,59 @@ function createElementScript() {
           }
         }
 
+        const exportNamesUsed = [];
+
         // Replace exports with globally accessible object exports.
-        for (let i in catalystExports) {
-          if (catalystExports[i].declaration === null) {
-            for (
-              let j = catalystExports[i].specifiers.length - 1;
-              j >= 0;
-              j--
-            ) {
-              let localName = catalystExports[i].specifiers[j].local.name;
-              let exportedName = catalystExports[i].specifiers[j].imported
-                ? catalystExports[i].specifiers[j].imported.name
+        const exportDefs = Object.keys(catalystExports);
+        for (let i = 0; i < exportDefs.length; i++) {
+          const exportDefIndex = exportDefs[i];
+          const exportDef = catalystExports[exportDefIndex];
+          if (exportDef.declaration === null) {
+            const specifiers = Object.values(exportDef.specifiers);
+            for (let j = specifiers.length - 1; j >= 0; j--) {
+              const specifier = specifiers[j];
+              const localName = specifier.local.name;
+              const exportedName = specifier.imported
+                ? specifier.imported.name
                 : localName;
 
+              if (!exportNamesUsed.includes(exportedName)) {
+                parsed.body.splice(
+                  exportDefIndex,
+                  0,
+                  esprima.parseScript(
+                    `window.CatalystElements.${exportedName} = ${localName};`
+                  )
+                );
+                exportNamesUsed.push(exportedName);
+              }
+            }
+          } else if (exportDef.declaration.type === 'Identifier') {
+            if (!exportNamesUsed.includes(exportDef.declaration.name)) {
               parsed.body.splice(
-                i,
+                exportDefIndex,
                 0,
                 esprima.parseScript(
-                  `window.CatalystElements.${exportedName} = ${localName};`
+                  `window.CatalystElements.${exportDef.declaration.name} = ${
+                    exportDef.declaration.name
+                  };`
                 )
               );
+              exportNamesUsed.push(exportDef.declaration.name);
             }
-          } else if (catalystExports[i].declaration.type === 'Identifier') {
-            parsed.body.splice(
-              i,
-              0,
-              esprima.parseScript(
-                `window.CatalystElements.${
-                  catalystExports[i].declaration.name
-                } = ${catalystExports[i].declaration.name};`
-              )
-            );
           } else {
             // eslint-disable-next-line no-console
             console.error(
-              `Cannot automatically process declaration in ${
-                catalystExports[i].type
-              }.`
+              `Cannot automatically process declaration in ${exportDef.type}.`
             );
           }
         }
 
         // Generate the updated code.
-        content = escodegen.generate(parsed);
-
-        return `window.CatalystElements = window.CatalystElements || {};${content}`;
+        return (
+          'window.CatalystElements = window.CatalystElements || {};\n' +
+          `${escodegen.generate(parsed)}`
+        );
       })
     )
     .pipe(
@@ -196,9 +213,9 @@ gulp.task(
               filename: `${config.mixin.name}.es5.min.js`
             },
             plugins: [
-              new webpackClosureCompilerPlugin({
+              new WebpackClosureCompilerPlugin({
                 compiler: {
-                  language_in: 'ECMASCRIPT6',
+                  language_in: 'ECMASCRIPT_NEXT',
                   language_out: 'ECMASCRIPT5',
                   compilation_level: 'SIMPLE',
                   assume_function_wrapper: true,

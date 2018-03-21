@@ -1,5 +1,7 @@
 # node_modules are automatically ignored
 
-docs/
-dist/
-tmp/
+/docs/
+/dist/
+/tmp/
+/catalyst-toggle-mixin.js
+/catalyst-toggle-mixin.es5.min.js

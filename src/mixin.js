@@ -1,30 +1,35 @@
 /**
+ * `<catalyst-toggle-mixin>` is a mix in funcation that retruns a class that extends the given super class.
+ * The returned class will be the same as the super class except it will also have toggle functionality.
+ *
  * @mixinFunction
  * @polymer
+ *
+ * @param {Class} superClass
+ *   The class to extend.
+ * @returns {Class.<CatalystToggle>}
  */
 const CatalystToggleMixin = superClass => {
   return class CatalystToggle extends superClass {
     /**
      * Key codes.
      *
+     * @public
      * @readonly
      * @enum {number}
-     * @returns {object}
      */
-    static get _KEYCODE() {
-      if (this.__keycode === undefined) {
-        this.__keycode = {
-          SPACE: 32,
-          ENTER: 13
-        };
-      }
-
-      return this.__keycode;
+    static get KEYCODE() {
+      return {
+        SPACE: 32,
+        ENTER: 13
+      };
     }
 
     /**
      * The attributes on this mixin to observe.
      *
+     * @public
+     * @readonly
      * @returns {Array.<string>}
      *   The attributes this mixin is observing for changes.
      */
@@ -41,18 +46,211 @@ const CatalystToggleMixin = superClass => {
     }
 
     /**
+     * States whether or not this element is checked.
+     *
+     * @public
+     * @default false
+     * @returns {boolean}
+     */
+    get checked() {
+      return this.hasAttribute('checked');
+    }
+
+    /**
+     * Setter for `checked`.
+     *
+     * @public
+     * @param {boolean} value
+     *   If truthy, `checked` will be set to true, otherwise `checked` will be set to false.
+     */
+    set checked(value) {
+      const isChecked = Boolean(value);
+      if (isChecked) {
+        this.setAttribute('checked', '');
+      } else {
+        this.removeAttribute('checked');
+      }
+    }
+
+    /**
+     * States whether or not this element is pressed.
+     *
+     * @public
+     * @default false
+     * @returns {boolean}
+     */
+    get pressed() {
+      return this.hasAttribute('pressed');
+    }
+
+    /**
+     * Setter for `pressed`.
+     *
+     * @public
+     * @param {boolean} value
+     *   If truthy, `pressed` will be set to true, otherwise `pressed` will be set to false.
+     */
+    set pressed(value) {
+      const isPressed = Boolean(value);
+      if (isPressed) {
+        this.setAttribute('pressed', '');
+      } else {
+        this.removeAttribute('pressed');
+      }
+    }
+
+    /**
+     * States whether or not this element is disabled.
+     *
+     * @public
+     * @default false
+     * @returns {boolean}
+     */
+    get disabled() {
+      return this.hasAttribute('disabled');
+    }
+
+    /**
+     * Setter for `disabled`.
+     *
+     * @public
+     * @param {boolean} value
+     *   If truthy, `disabled` will be set to true, otherwise `disabled` will be set to false.
+     */
+    set disabled(value) {
+      const isDisabled = Boolean(value);
+      if (isDisabled) {
+        this.setAttribute('disabled', '');
+      } else {
+        this.removeAttribute('disabled');
+      }
+    }
+
+    /**
+     * States whether or not this element is required.
+     *
+     * @public
+     * @default false
+     * @returns {boolean}
+     */
+    get required() {
+      return this.hasAttribute('required');
+    }
+
+    /**
+     * Setter for `required`.
+     *
+     * @public
+     * @param {boolean} value
+     *   If truthy, `required` will be set to true, otherwise `required` will be set to false.
+     */
+    set required(value) {
+      const isRequired = Boolean(value);
+      if (isRequired) {
+        this.setAttribute('required', '');
+      } else {
+        this.removeAttribute('required');
+      }
+    }
+
+    /**
+     * The name of this element. Used for forms.
+     *
+     * @public
+     * @returns {string}
+     */
+    get name() {
+      if (this.hasAttribute('name')) {
+        return this.getAttribute('name');
+      }
+      return '';
+    }
+
+    /**
+     * Setter for `name`.
+     *
+     * @public
+     * @param {string} value
+     *   The value to set.
+     */
+    set name(value) {
+      this.setAttribute('name', `${value}`);
+    }
+
+    /**
+     * The form this element is apart of.
+     *
+     * @public
+     * @readonly
+     * @returns {HTMLFormElement}
+     */
+    get form() {
+      return this.inputElement.form;
+    }
+
+    /**
+     * The value this element has. Used for forms.
+     *
+     * @public
+     * @returns {string}
+     */
+    get value() {
+      if (this.hasAttribute('value')) {
+        return this.getAttribute('value');
+      }
+      return 'on';
+    }
+
+    /**
+     * Setter for `value`.
+     *
+     * @public
+     * @param {string} value
+     *   The value to set.
+     */
+    set value(value) {
+      this.setAttribute('value', `${value}`);
+    }
+
+    /**
+     * The input element.
+     *
+     * @public
+     * @readonly
+     * @returns {HTMLInputElement}
+     */
+    get inputElement() {
+      // eslint-disable-next-line no-underscore-dangle
+      return this._inputElement;
+    }
+
+    /**
+     * Setter for `inputElement`.
+     *
+     * @protected
+     * @param {HTMLInputElement} value
+     *   The element to set it to.
+     */
+    set inputElement(value) {
+      // eslint-disable-next-line no-underscore-dangle
+      return this._inputElement;
+    }
+
+    /**
      * Construct the mixin.
+     *
+     * @public
      */
     constructor() {
       super();
 
       // Create the input element.
-      this._inputElement = document.createElement('input');
-      this._inputElement.type = 'checkbox';
-      this._inputElement.style.display = 'none';
+      this.inputElement = document.createElement('input');
+      this.inputElement.type = 'checkbox';
+      this.inputElement.style.display = 'none';
 
       // The input element needs to be in the lightDom to work with form elements.
-      this.appendChild(this._inputElement);
+      this.appendChild(this.inputElement);
     }
 
     /**
@@ -62,10 +260,10 @@ const CatalystToggleMixin = superClass => {
      */
     connectedCallback() {
       // Upgrade the element's properties.
-      this._upgradeProperty('checked');
-      this._upgradeProperty('pressed');
-      this._upgradeProperty('disabled');
-      this._upgradeProperty('required');
+      this.upgradeProperty('checked');
+      this.upgradeProperty('pressed');
+      this.upgradeProperty('disabled');
+      this.upgradeProperty('required');
 
       // Set the aria attributes.
       this.setAttribute('aria-disabled', this.disabled);
@@ -83,8 +281,8 @@ const CatalystToggleMixin = superClass => {
       }
 
       // Add the element's event listeners.
-      this.addEventListener('keydown', this._onKeyDown);
-      this.addEventListener('click', this._onClick);
+      this.addEventListener('keydown', this.onKeyDown);
+      this.addEventListener('click', this.onClick);
 
       // Set up labels on this element.
       this.setUpLabels();
@@ -102,23 +300,30 @@ const CatalystToggleMixin = superClass => {
      * A user may set a property on an _instance_ of an element before its prototype has been connected to this class.
      * This method will check for any instance properties and run them through the proper class setters.
      *
-     * See the [lazy properties](/web/fundamentals/architecture/building-components/best-practices#lazy-properties) section for more details.
+     * See the [lazy properties](https://developers.google.com/web/fundamentals/web-components/best-practices#lazy-properties)
+     * section for more details.
      *
+     * @protected
      * @param {string} prop
      *   The name of a property.
      */
-    _upgradeProperty(prop) {
+    upgradeProperty(prop) {
       // If the property exists.
-      if (this.hasOwnProperty(prop)) {
+      if (Object.prototype.hasOwnProperty.call(this, prop)) {
         // Delete it and reset it.
-        let value = this[prop];
+        const value = this[prop];
         delete this[prop];
         this[prop] = value;
+      } else if (this.hasAttribute(prop)) {
+        // Else if an attribute exists for the property, set the property using that.
+        this[prop] = this.getAttribute(prop);
       }
     }
 
     /**
      * Updated the labels for this element.
+     *
+     * @public
      */
     setUpLabels() {
       const id = this.id;
@@ -130,18 +335,18 @@ const CatalystToggleMixin = superClass => {
       const labels = rootNode.querySelectorAll(`label[for="${id}"]`);
 
       if (labels && labels.length > 0) {
-        let labelledBy = [];
+        const labelledBy = [];
         for (let i = 0; i < labels.length; i++) {
-          let label = labels[i];
+          const label = labels[i];
           if (label.id === '') {
-            label.id = this._generateGuid();
+            label.id = CatalystToggle.generateGuid();
           }
           labelledBy.push(label.id);
 
           if (this.getAttribute('role') !== 'button') {
             // Remove the event listener if it is already set the add it.
-            label.removeEventListener('click', this._onLabelClick.bind(this));
-            label.addEventListener('click', this._onLabelClick.bind(this));
+            label.removeEventListener('click', this.onLabelClick.bind(this));
+            label.addEventListener('click', this.onLabelClick.bind(this));
           }
         }
         this.setAttribute('aria-labelledby', labelledBy.join(' '));
@@ -154,172 +359,8 @@ const CatalystToggleMixin = superClass => {
      * @protected
      */
     disconnectedCallback() {
-      this.removeEventListener('keydown', this._onKeyDown);
-      this.removeEventListener('click', this._onClick);
-    }
-
-    /**
-     * Setter for `checked`.
-     *
-     * @param {boolean} value
-     *   If truthy, `checked` will be set to true, otherwise `checked` will be set to false.
-     */
-    set checked(value) {
-      const isChecked = Boolean(value);
-      if (isChecked) {
-        this.setAttribute('checked', '');
-      } else {
-        this.removeAttribute('checked');
-      }
-    }
-
-    /**
-     * States whether or not this element is checked.
-     *
-     * @default false
-     * @returns {boolean}
-     */
-    get checked() {
-      return this.hasAttribute('checked');
-    }
-
-    /**
-     * Setter for `pressed`.
-     *
-     * @param {boolean} value
-     *   If truthy, `pressed` will be set to true, otherwise `pressed` will be set to false.
-     */
-    set pressed(value) {
-      const isPressed = Boolean(value);
-      if (isPressed) {
-        this.setAttribute('pressed', '');
-      } else {
-        this.removeAttribute('pressed');
-      }
-    }
-
-    /**
-     * States whether or not this element is pressed.
-     *
-     * @default false
-     * @returns {boolean}
-     */
-    get pressed() {
-      return this.hasAttribute('pressed');
-    }
-
-    /**
-     * Setter for `disabled`.
-     *
-     * @param {boolean} value
-     *   If truthy, `disabled` will be set to true, otherwise `disabled` will be set to false.
-     */
-    set disabled(value) {
-      const isDisabled = Boolean(value);
-      if (isDisabled) {
-        this.setAttribute('disabled', '');
-      } else {
-        this.removeAttribute('disabled');
-      }
-    }
-
-    /**
-     * States whether or not this element is disabled.
-     *
-     * @default false
-     * @returns {boolean}
-     */
-    get disabled() {
-      return this.hasAttribute('disabled');
-    }
-
-    /**
-     * Setter for `required`.
-     *
-     * @param {boolean} value
-     *   If truthy, `required` will be set to true, otherwise `required` will be set to false.
-     */
-    set required(value) {
-      const isRequired = Boolean(value);
-      if (isRequired) {
-        this.setAttribute('required', '');
-      } else {
-        this.removeAttribute('required');
-      }
-    }
-
-    /**
-     * States whether or not this element is required.
-     *
-     * @default false
-     * @returns {boolean}
-     */
-    get required() {
-      return this.hasAttribute('required');
-    }
-
-    /**
-     * Setter for `name`.
-     *
-     * @param {string} value
-     *   The value to set.
-     */
-    set name(value) {
-      this.setAttribute('name', new String(value));
-    }
-
-    /**
-     * The name of this element. Used for forms.
-     *
-     * @returns {string}
-     */
-    get name() {
-      if (this.hasAttribute('name')) {
-        return this.getAttribute('name');
-      } else {
-        return '';
-      }
-    }
-
-    /**
-     * The form this element is apart of.
-     *
-     * @returns {HTMLFormElement}
-     */
-    get form() {
-      return this._inputElement.form;
-    }
-
-    /**
-     * Setter for `value`.
-     *
-     * @param {string} value
-     *   The value to set.
-     */
-    set value(value) {
-      this.setAttribute('value', new String(value));
-    }
-
-    /**
-     * The value this element has. Used for forms.
-     *
-     * @returns {string}
-     */
-    get value() {
-      if (this.hasAttribute('value')) {
-        return this.getAttribute('value');
-      } else {
-        return 'on';
-      }
-    }
-
-    /**
-     * The input element.
-     *
-     * @returns {HTMLInputElement}
-     */
-    get inputElement() {
-      return this._inputElement;
+      this.removeEventListener('keydown', this.onKeyDown);
+      this.removeEventListener('click', this.onClick);
     }
 
     /**
@@ -334,7 +375,7 @@ const CatalystToggleMixin = superClass => {
      *   The new value of the attribute that changed.
      */
     attributeChangedCallback(name, oldValue, newValue) {
-      let hasValue = newValue !== null;
+      const hasValue = newValue !== null;
 
       switch (name) {
         case 'checked':
@@ -347,9 +388,9 @@ const CatalystToggleMixin = superClass => {
           }
 
           if (hasValue) {
-            this.inputElement.setAttribute('checked', '');
+            this.inputElement2.setAttribute('checked', '');
           } else {
-            this.inputElement.removeAttribute('checked');
+            this.inputElement2.removeAttribute('checked');
           }
           break;
 
@@ -358,52 +399,52 @@ const CatalystToggleMixin = superClass => {
           this.setAttribute('aria-disabled', hasValue);
 
           if (hasValue) {
-            this.inputElement.setAttribute('disabled', '');
+            this.inputElement2.setAttribute('disabled', '');
 
             // If the tab index is set.
             if (this.hasAttribute('tabindex')) {
-              this._tabindexBeforeDisabled = this.getAttribute('tabindex');
+              this.tabindexBeforeDisabled = this.getAttribute('tabindex');
               this.removeAttribute('tabindex');
               this.blur();
             }
           } else {
-            this.inputElement.removeAttribute('disabled');
+            this.inputElement2.removeAttribute('disabled');
 
             // If the tab index isn't already set and the previous value is known.
             if (
               !this.hasAttribute('tabindex') &&
-              this._tabindexBeforeDisabled !== undefined &&
-              this._tabindexBeforeDisabled !== null
+              this.tabindexBeforeDisabled !== undefined &&
+              this.tabindexBeforeDisabled !== null
             ) {
-              this.setAttribute('tabindex', this._tabindexBeforeDisabled);
+              this.setAttribute('tabindex', this.tabindexBeforeDisabled);
             }
           }
           break;
 
         case 'required':
-          // Set the aria attribue.
+          // Set the aria attribute.
           this.setAttribute('aria-required', hasValue);
 
           if (hasValue) {
-            this.inputElement.setAttribute('required', '');
+            this.inputElement2.setAttribute('required', '');
           } else {
-            this.inputElement.removeAttribute('required');
+            this.inputElement2.removeAttribute('required');
           }
           break;
 
         case 'name':
           // Update the input element's name.
-          this.inputElement.setAttribute('name', new String(newValue));
+          this.inputElement2.setAttribute('name', `${newValue}`);
           break;
 
         case 'value':
           // Update the input element's value.
-          this.inputElement.setAttribute('value', new String(newValue));
+          this.inputElement2.setAttribute('value', `${newValue}`);
           break;
 
         case 'form':
           // Update the input element's form.
-          this._inputElement.setAttribute('form', newValue);
+          this.inputElement.setAttribute('form', newValue);
           break;
       }
     }
@@ -411,9 +452,11 @@ const CatalystToggleMixin = superClass => {
     /**
      * Called when a key is pressed on this element.
      *
+     * @protected
      * @param {KeyboardEvent} event
+     *   The keyboard event.
      */
-    _onKeyDown(event) {
+    onKeyDown(event) {
       // Don’t handle modifier shortcuts typically used by assistive technology.
       if (event.altKey) {
         return;
@@ -421,10 +464,10 @@ const CatalystToggleMixin = superClass => {
 
       // What key was pressed?
       switch (event.keyCode) {
-        case CatalystToggle._KEYCODE.SPACE:
-        case CatalystToggle._KEYCODE.ENTER:
+        case CatalystToggle.KEYCODE.SPACE:
+        case CatalystToggle.KEYCODE.ENTER:
           event.preventDefault();
-          this._toggleChecked();
+          this.toggleChecked();
           break;
 
         // Any other key press is ignored and passed back to the browser.
@@ -435,16 +478,20 @@ const CatalystToggleMixin = superClass => {
 
     /**
      * Called when this element is clicked.
+     *
+     * @protected
      */
-    _onClick() {
-      this._toggleChecked();
+    onClick() {
+      this.toggleChecked();
     }
 
     /**
      * Called when a label of this element is clicked.
+     *
+     * @protected
      */
-    _onLabelClick() {
-      this._toggleChecked();
+    onLabelClick() {
+      this.toggleChecked();
     }
 
     /**
@@ -453,8 +500,10 @@ const CatalystToggleMixin = superClass => {
      * also dispatch a change event.
      *
      * @fires change
+     *
+     * @protected
      */
-    _toggleChecked() {
+    toggleChecked() {
       // Don't do anything if disabled.
       if (this.disabled) {
         return;
@@ -490,29 +539,20 @@ const CatalystToggleMixin = superClass => {
      * Generate a guid (or at least something that seems like one)
      *
      * @see https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+     *
+     * @private
+     * @returns {string}
      */
-    _generateGuid() {
+    static generateGuid() {
       const s4 = () => {
         return Math.floor((1 + Math.random()) * 0x10000)
           .toString(16)
           .substring(1);
       };
-      return (
-        s4() +
-        s4() +
-        '-' +
-        s4() +
-        '-' +
-        s4() +
-        '-' +
-        s4() +
-        '-' +
-        s4() +
-        s4() +
-        s4()
-      );
+      return `${s4() + s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
     }
   };
 };
 
 export default CatalystToggleMixin;
+export { CatalystToggleMixin };
