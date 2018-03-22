@@ -47,124 +47,161 @@ function createElementScript() {
     .src(`./${config.src.path}/${config.src.entrypoint}`)
     .pipe(
       modifyFile(content => {
-        // Parse the code.
-        const parsed = esprima.parseModule(content);
-
-        // Get info about the code.
-        const codeIndexesToRemove = [];
-        const catalystImports = {};
-        const catalystExports = {};
-        for (let i = 0; i < parsed.body.length; i++) {
-          switch (parsed.body[i].type) {
-            case 'ImportDeclaration':
-              for (let j = 0; j < parsed.body[i].specifiers.length; j++) {
-                if (
-                  (parsed.body[i].specifiers[j].type ===
-                    'ImportDefaultSpecifier' &&
-                    parsed.body[i].specifiers[j].local.name.startsWith(
-                      'Catalyst'
-                    )) ||
-                  (parsed.body[i].specifiers[j].type === 'ImportSpecifier' &&
-                    parsed.body[i].specifiers[j].imported.name.startsWith(
-                      'Catalyst'
-                    ))
-                ) {
-                  catalystImports[i] = parsed.body[i];
-                  codeIndexesToRemove.push(i);
+        /**
+         * Strip the imports and exports out of the parse code and return them.
+         *
+         * @param {Program} parsedCode
+         *   The parsed code.
+         * @returns {{imports:Map<number,Object>, exports:Map<number,Object>}}
+         */
+        const stripImportsAndExports = parsedCode => {
+          // Get info about the code.
+          const codeIndexesToRemove = [];
+          const imports = new Map();
+          const exports = new Map();
+          for (let i = 0; i < parsedCode.body.length; i++) {
+            switch (parsedCode.body[i].type) {
+              case 'ImportDeclaration':
+                for (let j = 0; j < parsedCode.body[i].specifiers.length; j++) {
+                  if (
+                    (parsedCode.body[i].specifiers[j].type ===
+                      'ImportDefaultSpecifier' &&
+                      parsedCode.body[i].specifiers[j].local.name.startsWith(
+                        'Catalyst'
+                      )) ||
+                    (parsedCode.body[i].specifiers[j].type ===
+                      'ImportSpecifier' &&
+                      parsedCode.body[i].specifiers[j].imported.name.startsWith(
+                        'Catalyst'
+                      ))
+                  ) {
+                    imports.set(i, parsedCode.body[i]);
+                    codeIndexesToRemove.push(i);
+                  }
                 }
-              }
-              break;
+                break;
 
-            case 'ExportDefaultDeclaration':
-            case 'ExportNamedDeclaration':
-              catalystExports[i] = parsed.body[i];
-              codeIndexesToRemove.push(i);
-              break;
-          }
-        }
+              case 'ExportDefaultDeclaration':
+              case 'ExportNamedDeclaration':
+                exports.set(i, parsedCode.body[i]);
+                codeIndexesToRemove.push(i);
+                break;
 
-        // Remove imports and exports.
-        parsed.body = parsed.body.filter(
-          (e, i) => !codeIndexesToRemove.includes(i)
-        );
-
-        // Replace catalyst element's imports with globally accessible object import.
-        const importDefs = Object.keys(catalystImports);
-        for (let i = 0; i < importDefs.length; i++) {
-          const importDefIndex = importDefs[i];
-          const importDef = catalystExports[importDefIndex];
-          const specifiers = Object.values(importDef.specifiers);
-          for (let j = specifiers.length - 1; j >= 0; j--) {
-            const specifier = specifiers[j];
-            const localName = specifier.local.name;
-            const importedName = specifier.imported
-              ? specifier.imported.name
-              : localName;
-
-            if (importedName.startsWith('Catalyst')) {
-              parsed.body.splice(
-                importDefIndex,
-                0,
-                esprima.parseScript(
-                  `let ${localName} = window.CatalystElements.${importedName};`
-                )
-              );
+              // Different type? Do nothing.
+              default:
             }
           }
-        }
 
-        const exportNamesUsed = [];
+          // Remove imports and exports.
+          parsedCode.body = parsedCode.body.filter(
+            (e, i) => !codeIndexesToRemove.includes(i)
+          );
 
-        // Replace exports with globally accessible object exports.
-        const exportDefs = Object.keys(catalystExports);
-        for (let i = 0; i < exportDefs.length; i++) {
-          const exportDefIndex = exportDefs[i];
-          const exportDef = catalystExports[exportDefIndex];
-          if (exportDef.declaration === null) {
-            const specifiers = Object.values(exportDef.specifiers);
-            for (let j = specifiers.length - 1; j >= 0; j--) {
-              const specifier = specifiers[j];
+          return {
+            imports: imports,
+            exports: exports
+          };
+        };
+
+        /**
+         * Replace catalyst element's imports with globally accessible object import.
+         *
+         * @param {Program} parsedCode
+         *   The parsed code with the imports already stripped out.
+         * @param {Map<number,Object>} imports
+         *   The imports that have been stripped out of the parsed code.
+         */
+        const processImports = (parsedCode, imports) => {
+          for (const importDefIndex of Object.keys(imports)) {
+            const importDef = imports[importDefIndex];
+            for (const specifier of Object.values(importDef.specifiers)) {
               const localName = specifier.local.name;
-              const exportedName = specifier.imported
+              const importedName = specifier.imported
                 ? specifier.imported.name
                 : localName;
 
-              if (!exportNamesUsed.includes(exportedName)) {
-                parsed.body.splice(
+              if (importedName.startsWith('Catalyst')) {
+                parsedCode.body.splice(
+                  importDefIndex,
+                  0,
+                  esprima.parseScript(
+                    `let ${localName} = window.CatalystElements.${importedName};`
+                  )
+                );
+              } else {
+                throw new Error(
+                  `Cannot automatically process import "${importedName}"`
+                );
+              }
+            }
+          }
+        };
+
+        /**
+         * Replace exports with globally accessible object exports.
+         *
+         * @param {Program} parsedCode
+         *   The parsed code with the exports already stripped out.
+         * @param {Map<number,Object>} exports
+         *   The exports that have been stripped out of the parsed code.
+         */
+        const processExports = (parsedCode, exports) => {
+          const exportNamesUsed = [];
+
+          // Replace exports with globally accessible object exports.
+          for (const exportDefIndex of Object.keys(exports)) {
+            const exportDef = exports[exportDefIndex];
+            if (exportDef.declaration === null) {
+              for (const specifier of Object.values(exportDef.specifiers)) {
+                const localName = specifier.local.name;
+                const exportedName = specifier.imported
+                  ? specifier.imported.name
+                  : localName;
+
+                if (!exportNamesUsed.includes(exportedName)) {
+                  parsedCode.body.splice(
+                    exportDefIndex,
+                    0,
+                    esprima.parseScript(
+                      `window.CatalystElements.${exportedName} = ${localName};`
+                    )
+                  );
+                  exportNamesUsed.push(exportedName);
+                }
+              }
+            } else if (exportDef.declaration.type === 'Identifier') {
+              if (!exportNamesUsed.includes(exportDef.declaration.name)) {
+                parsedCode.body.splice(
                   exportDefIndex,
                   0,
                   esprima.parseScript(
-                    `window.CatalystElements.${exportedName} = ${localName};`
+                    `window.CatalystElements.${exportDef.declaration.name} = ${
+                      exportDef.declaration.name
+                    };`
                   )
                 );
-                exportNamesUsed.push(exportedName);
+                exportNamesUsed.push(exportDef.declaration.name);
               }
-            }
-          } else if (exportDef.declaration.type === 'Identifier') {
-            if (!exportNamesUsed.includes(exportDef.declaration.name)) {
-              parsed.body.splice(
-                exportDefIndex,
-                0,
-                esprima.parseScript(
-                  `window.CatalystElements.${exportDef.declaration.name} = ${
-                    exportDef.declaration.name
-                  };`
-                )
+            } else {
+              console.error(
+                `Cannot automatically process declaration in ${exportDef.type}.`
               );
-              exportNamesUsed.push(exportDef.declaration.name);
             }
-          } else {
-            // eslint-disable-next-line no-console
-            console.error(
-              `Cannot automatically process declaration in ${exportDef.type}.`
-            );
           }
-        }
+        };
+
+        // Parse the code.
+        const parsedCode = esprima.parseModule(content);
+
+        // Run functions defined above.
+        const { imports, exports } = stripImportsAndExports(parsedCode);
+        processImports(parsedCode, imports);
+        processExports(parsedCode, exports);
 
         // Generate the updated code.
         return (
           'window.CatalystElements = window.CatalystElements || {};\n' +
-          `${escodegen.generate(parsed)}`
+          `${escodegen.generate(parsedCode)}`
         );
       })
     )
