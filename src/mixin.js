@@ -336,8 +336,7 @@ const CatalystToggleMixin = superClass => {
 
       if (labels && labels.length > 0) {
         const labelledBy = [];
-        for (let i = 0; i < labels.length; i++) {
-          const label = labels[i];
+        for (const label of labels) {
           if (label.id === '') {
             label.id = CatalystToggle.generateGuid();
           }
@@ -446,6 +445,9 @@ const CatalystToggleMixin = superClass => {
           // Update the input element's form.
           this.inputElement.setAttribute('form', newValue);
           break;
+
+        // Different attribute changed? Do nothing.
+        default:
       }
     }
 
