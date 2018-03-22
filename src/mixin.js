@@ -9,7 +9,7 @@
  *   The class to extend.
  * @returns {Class.<CatalystToggle>}
  */
-const CatalystToggleMixin = superClass => {
+const catalystToggleMixin = superClass => {
   return class CatalystToggle extends superClass {
     /**
      * Key codes.
@@ -556,5 +556,5 @@ const CatalystToggleMixin = superClass => {
   };
 };
 
-export default CatalystToggleMixin;
-export { CatalystToggleMixin };
+export default catalystToggleMixin;
+export { catalystToggleMixin };
