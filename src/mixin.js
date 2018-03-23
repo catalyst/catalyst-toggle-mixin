@@ -244,7 +244,7 @@ const catalystToggleMixin = MixWith => {
      */
     set inputElement(value) {
       // eslint-disable-next-line no-underscore-dangle
-      return this._inputElement;
+      this._inputElement = value;
     }
 
     /**
