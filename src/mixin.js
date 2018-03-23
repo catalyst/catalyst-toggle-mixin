@@ -271,7 +271,9 @@ const catalystToggleMixin = MixWith => {
      * @protected
      */
     connectedCallback() {
-      super.disconnectedCallback();
+      if (typeof super.connectedCallback === 'function') {
+        super.connectedCallback();
+      }
 
       // Upgrade the element's properties.
       this.upgradeProperty('checked');
@@ -337,7 +339,9 @@ const catalystToggleMixin = MixWith => {
      * @protected
      */
     disconnectedCallback() {
-      super.disconnectedCallback();
+      if (typeof super.disconnectedCallback === 'function') {
+        super.disconnectedCallback();
+      }
       this.removeEventListener('keydown', this.onKeyDown);
       this.removeEventListener('click', this.onClick);
     }
@@ -354,7 +358,9 @@ const catalystToggleMixin = MixWith => {
      *   The new value of the attribute that changed.
      */
     attributeChangedCallback(name, oldValue, newValue) {
-      super.attributeChangedCallback();
+      if (typeof super.attributeChangedCallback === 'function') {
+        super.attributeChangedCallback();
+      }
 
       const hasValue = newValue !== null;
 
