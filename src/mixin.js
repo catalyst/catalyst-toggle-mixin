@@ -336,7 +336,7 @@ const catalystToggleMixin = MixWith => {
      */
     attributeChangedCallback(name, oldValue, newValue) {
       if (typeof super.attributeChangedCallback === 'function') {
-        super.attributeChangedCallback();
+        super.attributeChangedCallback(name, oldValue, newValue);
       }
 
       const hasValue = newValue !== null;
