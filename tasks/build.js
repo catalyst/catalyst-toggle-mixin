@@ -112,8 +112,7 @@ function createElementScript() {
          *   The imports that have been stripped out of the parsed code.
          */
         const processImports = (parsedCode, imports) => {
-          for (const importDefIndex of Object.keys(imports)) {
-            const importDef = imports[importDefIndex];
+          for (const [importDefIndex, importDef] of imports) {
             for (const specifier of Object.values(importDef.specifiers)) {
               const localName = specifier.local.name;
               const importedName = specifier.imported
@@ -149,8 +148,7 @@ function createElementScript() {
           const exportNamesUsed = [];
 
           // Replace exports with globally accessible object exports.
-          for (const exportDefIndex of Object.keys(exports)) {
-            const exportDef = exports[exportDefIndex];
+          for (const [exportDefIndex, exportDef] of exports) {
             if (exportDef.declaration === null) {
               for (const specifier of Object.values(exportDef.specifiers)) {
                 const localName = specifier.local.name;
