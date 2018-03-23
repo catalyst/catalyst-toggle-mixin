@@ -32,6 +32,10 @@
     "postinstall": "./node_modules/.bin/gulp fix-dependencies",
     "prepublishOnly": "echo \"Error: must publish from dist/\" && exit 1"
   },
+  "dependencies": {
+    "@catalyst-elements/catalyst-labelable-mixin": "^0.1.0",
+    "@catalyst-elements/catalyst-lazy-properties-mixin": "^0.1.0"
+  },
   "devDependencies": {
     "@polymer/iron-component-page": "^3.0.0-pre.1",
     "@polymer/iron-demo-helpers": "^3.0.0-pre.1",
