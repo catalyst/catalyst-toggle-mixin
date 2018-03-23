@@ -2,7 +2,7 @@
   "name": "@catalyst-elements/catalyst-toggle-mixin",
   "license": "BSD-3-Clause",
   "version": "0.5.1",
-  "description": "A toggle mixin behavior for an element.",
+  "description": "A mixin that makes an element toggleable.",
   "main": "src/mixin.js",
   "repository": {
     "type": "git",
@@ -14,7 +14,7 @@
   },
   "keywords": [
     "web-components",
-    "button",
+    "mixin",
     "toggle"
   ],
   "bugs": {
