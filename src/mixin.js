@@ -1,5 +1,7 @@
 import catalystLabelMixin from '../node_modules/@catalyst-elements/catalyst-labelable-mixin/catalyst-labelable-mixin.js';
 
+const mixinId = Symbol('CatalystToggleMixinID');
+
 /**
  * `<catalyst-toggle-mixin>` is a mix in funcation that retruns a class that extends the given super class.
  * The returned class will be the same as the super class except it will also have toggle functionality.
@@ -12,6 +14,11 @@ import catalystLabelMixin from '../node_modules/@catalyst-elements/catalyst-labe
  * @returns {Class.<CatalystToggle>}
  */
 const catalystToggleMixin = MixWith => {
+  // Does this class already have this mixin applied?
+  if (MixWith[mixinId] === true) {
+    return MixWith;
+  }
+
   const SuperClass = catalystLabelMixin(MixWith);
   return class CatalystToggle extends SuperClass {
     /**
@@ -246,6 +253,7 @@ const catalystToggleMixin = MixWith => {
      */
     constructor() {
       super();
+      this[mixinId] = true;
 
       // Create the input element.
       this.inputElement = document.createElement('input');
