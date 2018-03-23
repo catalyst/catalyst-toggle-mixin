@@ -19,6 +19,7 @@ const catalystToggleMixin = MixWith => {
     return MixWith;
   }
 
+  // Apply the mixin.
   const SuperClass = catalystLabelMixin(MixWith);
   return class CatalystToggle extends SuperClass {
     /**
@@ -270,6 +271,8 @@ const catalystToggleMixin = MixWith => {
      * @protected
      */
     connectedCallback() {
+      super.disconnectedCallback();
+
       // Upgrade the element's properties.
       this.upgradeProperty('checked');
       this.upgradeProperty('pressed');
@@ -294,9 +297,6 @@ const catalystToggleMixin = MixWith => {
       // Add the element's event listeners.
       this.addEventListener('keydown', this.onKeyDown);
       this.addEventListener('click', this.onClick);
-
-      // Set up labels on this element.
-      this.setUpLabels();
 
       // If using ShadyCSS.
       if (window.ShadyCSS !== undefined) {
@@ -354,6 +354,8 @@ const catalystToggleMixin = MixWith => {
      *   The new value of the attribute that changed.
      */
     attributeChangedCallback(name, oldValue, newValue) {
+      super.attributeChangedCallback();
+
       const hasValue = newValue !== null;
 
       switch (name) {
@@ -471,6 +473,7 @@ const catalystToggleMixin = MixWith => {
      * Called when a label of this element is clicked.
      *
      * @protected
+     * @override
      */
     onLabelClick() {
       if (this.getAttribute('role') !== 'button') {
