@@ -1,4 +1,5 @@
 import catalystLabelableMixin from '../node_modules/@catalyst-elements/catalyst-labelable-mixin/catalyst-labelable-mixin.js';
+import catalystLazyPropertiesMixin from '../node_modules/@catalyst-elements/catalyst-lazy-properties-mixin/catalyst-lazy-properties-mixin.js';
 
 const mixinId = Symbol('CatalystToggleMixinID');
 
@@ -20,7 +21,9 @@ const catalystToggleMixin = MixWith => {
   }
 
   // Apply the mixin.
-  const SuperClass = catalystLabelMixin(MixWith);
+  const SuperClass = catalystLazyPropertiesMixin(
+    catalystLabelableMixin(MixWith)
+  );
   return class CatalystToggle extends SuperClass {
     /**
      * Key codes.
@@ -304,32 +307,6 @@ const catalystToggleMixin = MixWith => {
       if (window.ShadyCSS !== undefined) {
         // Style the element.
         window.ShadyCSS.styleElement(this);
-      }
-    }
-
-    /**
-     * Upgrade the property on this element with the given name.
-     *
-     * A user may set a property on an _instance_ of an element before its prototype has been connected to this class.
-     * This method will check for any instance properties and run them through the proper class setters.
-     *
-     * See the [lazy properties](https://developers.google.com/web/fundamentals/web-components/best-practices#lazy-properties)
-     * section for more details.
-     *
-     * @protected
-     * @param {string} prop
-     *   The name of a property.
-     */
-    upgradeProperty(prop) {
-      // If the property exists.
-      if (Object.prototype.hasOwnProperty.call(this, prop)) {
-        // Delete it and reset it.
-        const value = this[prop];
-        delete this[prop];
-        this[prop] = value;
-      } else if (this.hasAttribute(prop)) {
-        // Else if an attribute exists for the property, set the property using that.
-        this[prop] = this.getAttribute(prop);
       }
     }
 
