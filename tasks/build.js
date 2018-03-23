@@ -244,7 +244,7 @@ gulp.task(
         webpackStream(
           {
             target: 'web',
-            mode: 'production',
+            mode: 'none',
             output: {
               chunkFilename: `${config.mixin.name}.part-[id].es5.min.js`,
               filename: `${config.mixin.name}.es5.min.js`

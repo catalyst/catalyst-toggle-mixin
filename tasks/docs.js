@@ -168,7 +168,7 @@ gulp.task(
           webpackStream(
             {
               target: 'web',
-              mode: 'production',
+              mode: 'none',
               output: {
                 chunkFilename: `${docsImportsBaseName}.[id].js`,
                 filename: `${config.docs.importsImporterFilename}`
