@@ -375,9 +375,9 @@ const catalystToggleMixin = MixWith => {
           }
 
           if (hasValue) {
-            this.inputElement2.setAttribute('checked', '');
+            this.inputElement.setAttribute('checked', '');
           } else {
-            this.inputElement2.removeAttribute('checked');
+            this.inputElement.removeAttribute('checked');
           }
           break;
 
@@ -386,7 +386,7 @@ const catalystToggleMixin = MixWith => {
           this.setAttribute('aria-disabled', hasValue);
 
           if (hasValue) {
-            this.inputElement2.setAttribute('disabled', '');
+            this.inputElement.setAttribute('disabled', '');
 
             // If the tab index is set.
             if (this.hasAttribute('tabindex')) {
@@ -395,7 +395,7 @@ const catalystToggleMixin = MixWith => {
               this.blur();
             }
           } else {
-            this.inputElement2.removeAttribute('disabled');
+            this.inputElement.removeAttribute('disabled');
 
             // If the tab index isn't already set and the previous value is known.
             if (
@@ -413,20 +413,20 @@ const catalystToggleMixin = MixWith => {
           this.setAttribute('aria-required', hasValue);
 
           if (hasValue) {
-            this.inputElement2.setAttribute('required', '');
+            this.inputElement.setAttribute('required', '');
           } else {
-            this.inputElement2.removeAttribute('required');
+            this.inputElement.removeAttribute('required');
           }
           break;
 
         case 'name':
           // Update the input element's name.
-          this.inputElement2.setAttribute('name', `${newValue}`);
+          this.inputElement.setAttribute('name', `${newValue}`);
           break;
 
         case 'value':
           // Update the input element's value.
-          this.inputElement2.setAttribute('value', `${newValue}`);
+          this.inputElement.setAttribute('value', `${newValue}`);
           break;
 
         case 'form':
