@@ -1,4 +1,4 @@
-import catalystLabelMixin from '../node_modules/@catalyst-elements/catalyst-labelable-mixin/catalyst-labelable-mixin.js';
+import catalystLabelableMixin from '../node_modules/@catalyst-elements/catalyst-labelable-mixin/catalyst-labelable-mixin.js';
 
 const mixinId = Symbol('CatalystToggleMixinID');
 
