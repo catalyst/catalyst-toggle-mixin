@@ -1,3 +1,5 @@
+import catalystLabelMixin from '../node_modules/@catalyst-elements/catalyst-labelable-mixin/catalyst-labelable-mixin.js';
+
 /**
  * `<catalyst-toggle-mixin>` is a mix in funcation that retruns a class that extends the given super class.
  * The returned class will be the same as the super class except it will also have toggle functionality.
@@ -5,12 +7,13 @@
  * @mixinFunction
  * @polymer
  *
- * @param {Class} superClass
- *   The class to extend.
+ * @param {Class} MixWith
+ *   The class to extend/apply this mixin to.
  * @returns {Class.<CatalystToggle>}
  */
-const catalystToggleMixin = superClass => {
-  return class CatalystToggle extends superClass {
+const catalystToggleMixin = MixWith => {
+  const SuperClass = catalystLabelMixin(MixWith);
+  return class CatalystToggle extends SuperClass {
     /**
      * Key codes.
      *
@@ -321,43 +324,12 @@ const catalystToggleMixin = superClass => {
     }
 
     /**
-     * Updated the labels for this element.
-     *
-     * @public
-     */
-    setUpLabels() {
-      const id = this.id;
-      if (id === undefined || id === '') {
-        return;
-      }
-
-      const rootNode = 'getRootNode' in this ? this.getRootNode() : document;
-      const labels = rootNode.querySelectorAll(`label[for="${id}"]`);
-
-      if (labels && labels.length > 0) {
-        const labelledBy = [];
-        for (const label of labels) {
-          if (label.id === '') {
-            label.id = CatalystToggle.generateGuid();
-          }
-          labelledBy.push(label.id);
-
-          if (this.getAttribute('role') !== 'button') {
-            // Remove the event listener if it is already set the add it.
-            label.removeEventListener('click', this.onLabelClick.bind(this));
-            label.addEventListener('click', this.onLabelClick.bind(this));
-          }
-        }
-        this.setAttribute('aria-labelledby', labelledBy.join(' '));
-      }
-    }
-
-    /**
      * Fires when the element is removed from the DOM.
      *
      * @protected
      */
     disconnectedCallback() {
+      super.disconnectedCallback();
       this.removeEventListener('keydown', this.onKeyDown);
       this.removeEventListener('click', this.onClick);
     }
@@ -493,7 +465,9 @@ const catalystToggleMixin = superClass => {
      * @protected
      */
     onLabelClick() {
-      this.toggleChecked();
+      if (this.getAttribute('role') !== 'button') {
+        this.toggleChecked();
+      }
     }
 
     /**
@@ -535,23 +509,6 @@ const catalystToggleMixin = superClass => {
           bubbles: true
         })
       );
-    }
-
-    /**
-     * Generate a guid (or at least something that seems like one)
-     *
-     * @see https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
-     *
-     * @private
-     * @returns {string}
-     */
-    static generateGuid() {
-      const s4 = () => {
-        return Math.floor((1 + Math.random()) * 0x10000)
-          .toString(16)
-          .substring(1);
-      };
-      return `${s4() + s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
     }
   };
 };
