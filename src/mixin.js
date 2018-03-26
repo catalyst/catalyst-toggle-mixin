@@ -2,6 +2,8 @@ import { catalystLabelableMixin } from '../node_modules/@catalyst-elements/catal
 import { catalystLazyPropertiesMixin } from '../node_modules/@catalyst-elements/catalyst-lazy-properties-mixin/catalyst-lazy-properties-mixin.js';
 
 const mixinId = Symbol('CatalystToggleMixinID');
+const inputElement = Symbol('input element');
+const tabindexBeforeDisabled = Symbol('tabindex before element was disabled');
 
 /**
  * Key codes.
@@ -233,8 +235,7 @@ const catalystToggleMixin = MixWith => {
      * @returns {HTMLInputElement}
      */
     get inputElement() {
-      // eslint-disable-next-line no-underscore-dangle
-      return this._inputElement;
+      return this[inputElement];
     }
 
     /**
@@ -245,8 +246,7 @@ const catalystToggleMixin = MixWith => {
      *   The element to set it to.
      */
     set inputElement(value) {
-      // eslint-disable-next-line no-underscore-dangle
-      this._inputElement = value;
+      this[inputElement] = value;
     }
 
     /**
@@ -366,7 +366,7 @@ const catalystToggleMixin = MixWith => {
 
             // If the tab index is set.
             if (this.hasAttribute('tabindex')) {
-              this.tabindexBeforeDisabled = this.getAttribute('tabindex');
+              this[tabindexBeforeDisabled] = this.getAttribute('tabindex');
               this.removeAttribute('tabindex');
               this.blur();
             }
@@ -376,9 +376,10 @@ const catalystToggleMixin = MixWith => {
             // If the tab index isn't already set and the previous value is known.
             if (
               !this.hasAttribute('tabindex') &&
-              this.tabindexBeforeDisabled != null
+              this[tabindexBeforeDisabled] != null
             ) {
-              this.setAttribute('tabindex', this.tabindexBeforeDisabled);
+              this.setAttribute('tabindex', this[tabindexBeforeDisabled]);
+              this[tabindexBeforeDisabled] = null;
             }
           }
           break;
