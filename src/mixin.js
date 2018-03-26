@@ -304,7 +304,7 @@ const catalystToggleMixin = MixWith => {
       this.addEventListener('click', this.onClick);
 
       // If using ShadyCSS.
-      if (window.ShadyCSS !== undefined) {
+      if (window.ShadyCSS != null) {
         // Style the element.
         window.ShadyCSS.styleElement(this);
       }
@@ -339,7 +339,7 @@ const catalystToggleMixin = MixWith => {
         super.attributeChangedCallback(name, oldValue, newValue);
       }
 
-      const hasValue = newValue !== null;
+      const hasValue = newValue != null;
 
       switch (name) {
         case 'checked':
@@ -377,8 +377,7 @@ const catalystToggleMixin = MixWith => {
             // If the tab index isn't already set and the previous value is known.
             if (
               !this.hasAttribute('tabindex') &&
-              this.tabindexBeforeDisabled !== undefined &&
-              this.tabindexBeforeDisabled !== null
+              this.tabindexBeforeDisabled != null
             ) {
               this.setAttribute('tabindex', this.tabindexBeforeDisabled);
             }
