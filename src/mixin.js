@@ -199,6 +199,9 @@ const catalystToggleMixin = MixWith => {
      * @returns {HTMLFormElement}
      */
     get form() {
+      if (this.inputElement == null) {
+        return null;
+      }
       return this.inputElement.form;
     }
 
