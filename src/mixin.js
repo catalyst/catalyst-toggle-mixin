@@ -4,6 +4,16 @@ import { catalystLazyPropertiesMixin } from '../node_modules/@catalyst-elements/
 const mixinId = Symbol('CatalystToggleMixinID');
 
 /**
+ * Key codes.
+ *
+ * @enum {number}
+ */
+const KEYCODE = {
+  SPACE: 32,
+  ENTER: 13
+};
+
+/**
  * `<catalyst-toggle-mixin>` is a mix in funcation that retruns a class that extends the given super class.
  * The returned class will be the same as the super class except it will also have toggle functionality.
  *
@@ -25,20 +35,6 @@ const catalystToggleMixin = MixWith => {
     catalystLabelableMixin(MixWith)
   );
   return class CatalystToggle extends SuperClass {
-    /**
-     * Key codes.
-     *
-     * @public
-     * @readonly
-     * @enum {number}
-     */
-    static get KEYCODE() {
-      return {
-        SPACE: 32,
-        ENTER: 13
-      };
-    }
-
     /**
      * The attributes on this mixin to observe.
      *
@@ -433,8 +429,8 @@ const catalystToggleMixin = MixWith => {
 
       // What key was pressed?
       switch (event.keyCode) {
-        case CatalystToggle.KEYCODE.SPACE:
-        case CatalystToggle.KEYCODE.ENTER:
+        case KEYCODE.SPACE:
+        case KEYCODE.ENTER:
           event.preventDefault();
           this.toggleChecked();
           break;
